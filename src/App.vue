@@ -1,28 +1,51 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png" />
-    <HelloWorld msg="Welcome to Your Vue.js App" />
+    <div class="searchs">
+      <md-field>
+        <label>Ada göre filtre!</label>
+        <md-input v-model="type"> </md-input>
+      </md-field>
+    </div>
+    <Cards :posts="posts" :type="type" />
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue';
+import axios from 'axios';
+import Cards from './components/Cards.vue';
 
 export default {
-  name: 'App',
   components: {
-    HelloWorld,
+    Cards,
+  },
+
+  mounted: function() {
+    axios
+      .get('https://randomuser.me/api/?results=50')
+      .then(response => (this.posts = response.data.results))
+      .catch(() => (this.posts = [{name: 'No posts found.'}]))
+      .finally(() => console.log('Data loading compilated.'));
+  },
+  data: function() {
+    return {
+      posts: [],
+      type: '',
+    };
   },
 };
 </script>
 
-<style>
+<style scoped>
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+  margin-top: 0;
+}
+.searchs {
+  width: 400px;
+  margin: 0px auto;
+  text-align: center;
 }
 </style>
